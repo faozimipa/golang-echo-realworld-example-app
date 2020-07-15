@@ -2,10 +2,12 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/xesina/golang-echo-realworld-example-app/router/middleware"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
+	"github.com/faozimipa/golang-echo-realworld-example-app/router/middleware"
+	"github.com/faozimipa/golang-echo-realworld-example-app/utils"
+
 )
 
+//Register routes
 func (h *Handler) Register(v1 *echo.Group) {
 	jwtMiddleware := middleware.JWT(utils.JWTSecret)
 	guestUsers := v1.Group("/users")
@@ -38,6 +40,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	articles.DELETE("/:slug", h.DeleteArticle)
 	articles.POST("/:slug/comments", h.AddComment)
 	articles.DELETE("/:slug/comments/:id", h.DeleteComment)
+	articles.POST("/:slug/comments/:id", h.EditComment)
 	articles.POST("/:slug/favorite", h.Favorite)
 	articles.DELETE("/:slug/favorite", h.Unfavorite)
 	articles.GET("", h.Articles)

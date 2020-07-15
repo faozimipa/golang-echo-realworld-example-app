@@ -3,7 +3,8 @@ package handler
 import (
 	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
-	"github.com/xesina/golang-echo-realworld-example-app/model"
+	"github.com/faozimipa/golang-echo-realworld-example-app/model"
+
 )
 
 type userUpdateRequest struct {
@@ -158,7 +159,25 @@ type createCommentRequest struct {
 	} `json:"comment"`
 }
 
+type editCommentRequest struct {
+	Comment struct {
+		Body string `json:"body" validate:"required"`
+	} `json:"comment"`
+}
+
 func (r *createCommentRequest) bind(c echo.Context, cm *model.Comment) error {
+	if err := c.Bind(r); err != nil {
+		return err
+	}
+	if err := c.Validate(r); err != nil {
+		return err
+	}
+	cm.Body = r.Comment.Body
+	cm.UserID = userIDFromToken(c)
+	return nil
+}
+
+func (r *editCommentRequest) bind(c echo.Context, cm *model.Comment) error {
 	if err := c.Bind(r); err != nil {
 		return err
 	}

@@ -1,9 +1,11 @@
 package user
 
 import (
-	"github.com/xesina/golang-echo-realworld-example-app/model"
+	"github.com/faozimipa/golang-echo-realworld-example-app/model"
+
 )
 
+//Store interface 
 type Store interface {
 	GetByID(uint) (*model.User, error)
 	GetByEmail(string) (*model.User, error)

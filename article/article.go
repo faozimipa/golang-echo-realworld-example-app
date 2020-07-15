@@ -1,9 +1,11 @@
 package article
 
 import (
-	"github.com/xesina/golang-echo-realworld-example-app/model"
+	"github.com/faozimipa/golang-echo-realworld-example-app/model"
+
 )
 
+//Store interface 
 type Store interface {
 	GetBySlug(string) (*model.Article, error)
 	GetUserArticleBySlug(userID uint, slug string) (*model.Article, error)
@@ -17,6 +19,7 @@ type Store interface {
 	ListFeed(userID uint, offset, limit int) ([]model.Article, int, error)
 
 	AddComment(*model.Article, *model.Comment) error
+	UpdateComment(*model.Comment) error
 	GetCommentsBySlug(string) ([]model.Comment, error)
 	GetCommentByID(uint) (*model.Comment, error)
 	DeleteComment(*model.Comment) error

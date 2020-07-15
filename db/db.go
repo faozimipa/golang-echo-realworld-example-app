@@ -2,26 +2,34 @@ package db
 
 import (
 	"fmt"
-
 	"os"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/xesina/golang-echo-realworld-example-app/model"
+	// "github.com/joho/godotenv"
+	// _ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/faozimipa/golang-echo-realworld-example-app/model"
+
 )
 
+//New db func 
 func New() *gorm.DB {
-	db, err := gorm.Open("sqlite3", "./realworld.db")
+	// DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"), os.Getenv("DB_PASSWORD"))
+		
+	// db, err := gorm.Open("postgres", DBURL)
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=rw password=secret  sslmode=disable")
+
 	if err != nil {
-		fmt.Println("storage err: ", err)
+		fmt.Println("Database error: ", err)
 	}
 	db.DB().SetMaxIdleConns(3)
 	db.LogMode(true)
 	return db
 }
 
+//TestDB func 
 func TestDB() *gorm.DB {
-	db, err := gorm.Open("sqlite3", "./../realworld_test.db")
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=rw password=secret  sslmode=disable")
 	if err != nil {
 		fmt.Println("storage err: ", err)
 	}
@@ -30,6 +38,7 @@ func TestDB() *gorm.DB {
 	return db
 }
 
+//DropTestDB func
 func DropTestDB() error {
 	if err := os.Remove("./../realworld_test.db"); err != nil {
 		return err
@@ -37,7 +46,8 @@ func DropTestDB() error {
 	return nil
 }
 
-//TODO: err check
+
+//AutoMigrate func 
 func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
 		&model.User{},

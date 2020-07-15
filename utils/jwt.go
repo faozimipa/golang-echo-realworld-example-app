@@ -2,12 +2,16 @@ package utils
 
 import (
 	"time"
+	"os"
 
 	"github.com/dgrijalva/jwt-go"
+
 )
 
-var JWTSecret = []byte("!!SECRET!!")
+//JWTSecret to set secret key
+var JWTSecret = []byte(os.Getenv("JWT_ACCESS_SECRET"))
 
+//GenerateJWT to generate token
 func GenerateJWT(id uint) string {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)

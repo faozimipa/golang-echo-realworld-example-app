@@ -5,12 +5,15 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"gopkg.in/go-playground/validator.v9"
+
 )
 
+//Error struct
 type Error struct {
 	Errors map[string]interface{} `json:"errors"`
 }
 
+//NewError struct
 func NewError(err error) Error {
 	e := Error{}
 	e.Errors = make(map[string]interface{})
@@ -23,6 +26,7 @@ func NewError(err error) Error {
 	return e
 }
 
+//NewValidatorError func
 func NewValidatorError(err error) Error {
 	e := Error{}
 	e.Errors = make(map[string]interface{})
@@ -33,6 +37,7 @@ func NewValidatorError(err error) Error {
 	return e
 }
 
+//AccessForbidden func 
 func AccessForbidden() Error {
 	e := Error{}
 	e.Errors = make(map[string]interface{})
@@ -40,6 +45,7 @@ func AccessForbidden() Error {
 	return e
 }
 
+//NotFound func
 func NotFound() Error {
 	e := Error{}
 	e.Errors = make(map[string]interface{})

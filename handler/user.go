@@ -4,8 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/xesina/golang-echo-realworld-example-app/model"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
+	"github.com/faozimipa/golang-echo-realworld-example-app/model"
+	"github.com/faozimipa/golang-echo-realworld-example-app/utils"
+
 )
 
 // SignUp godoc

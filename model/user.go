@@ -5,8 +5,10 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+
 )
 
+//User struct
 type User struct {
 	gorm.Model
 	Username   string `gorm:"unique_index;not null"`
@@ -19,6 +21,7 @@ type User struct {
 	Favorites  []Article `gorm:"many2many:favorites;"`
 }
 
+//Follow struct
 type Follow struct {
 	Follower    User
 	FollowerID  uint `gorm:"primary_key" sql:"type:int not null"`
@@ -26,6 +29,7 @@ type Follow struct {
 	FollowingID uint `gorm:"primary_key" sql:"type:int not null"`
 }
 
+//HashPassword func
 func (u *User) HashPassword(plain string) (string, error) {
 	if len(plain) == 0 {
 		return "", errors.New("password should not be empty")
@@ -34,6 +38,7 @@ func (u *User) HashPassword(plain string) (string, error) {
 	return string(h), err
 }
 
+//CheckPassword func
 func (u *User) CheckPassword(plain string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plain))
 	return err == nil

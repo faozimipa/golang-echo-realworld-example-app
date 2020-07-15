@@ -6,29 +6,36 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
+	"github.com/faozimipa/golang-echo-realworld-example-app/utils"
+
 )
 
 type (
+	//JWTConfig struct 
 	JWTConfig struct {
 		Skipper    Skipper
 		SigningKey interface{}
 	}
+	//Skipper func 
 	Skipper      func(c echo.Context) bool
 	jwtExtractor func(echo.Context) (string, error)
 )
 
 var (
+	//ErrJWTMissing setter
 	ErrJWTMissing = echo.NewHTTPError(http.StatusUnauthorized, "missing or malformed jwt")
+	//ErrJWTInvalid setter
 	ErrJWTInvalid = echo.NewHTTPError(http.StatusForbidden, "invalid or expired jwt")
 )
 
+//JWT func 
 func JWT(key interface{}) echo.MiddlewareFunc {
 	c := JWTConfig{}
 	c.SigningKey = key
 	return JWTWithConfig(c)
 }
 
+//JWTWithConfig func 
 func JWTWithConfig(config JWTConfig) echo.MiddlewareFunc {
 	extractor := jwtFromHeader("Authorization", "Token")
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -48,6 +55,7 @@ func JWTWithConfig(config JWTConfig) echo.MiddlewareFunc {
 				}
 				return config.SigningKey, nil
 			})
+
 			if err != nil {
 				return c.JSON(http.StatusForbidden, utils.NewError(ErrJWTInvalid))
 			}

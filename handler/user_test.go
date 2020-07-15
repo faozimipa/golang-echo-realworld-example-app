@@ -8,8 +8,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-	"github.com/xesina/golang-echo-realworld-example-app/router/middleware"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
+	"github.com/faozimipa/golang-echo-realworld-example-app/router/middleware"
+	"github.com/faozimipa/golang-echo-realworld-example-app/utils"
+
 )
 
 func TestSignUpCaseSuccess(t *testing.T) {

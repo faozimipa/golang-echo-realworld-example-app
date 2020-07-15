@@ -30,9 +30,9 @@ RUN go install -installsuffix cgo -ldflags="-w -s" && \
 #
 FROM alpine
 
-LABEL maintainer="Sina Saeidi <xesina@gmail.com>"
+LABEL maintainer="FAOZI <gmail@faozi.me>"
 
-ENV TZ=Asia/Tehran \
+ENV TZ=Asia/Jakarta \
     PATH="/app:${PATH}"
 
 RUN apk add --update --no-cache \

@@ -6,8 +6,9 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/xesina/golang-echo-realworld-example-app/model"
-	"github.com/xesina/golang-echo-realworld-example-app/utils"
+	"github.com/faozimipa/golang-echo-realworld-example-app/model"
+	"github.com/faozimipa/golang-echo-realworld-example-app/utils"
+
 )
 
 // GetArticle godoc
@@ -285,6 +286,56 @@ func (h *Handler) AddComment(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, newCommentResponse(c, &cm))
+}
+
+
+// EditComment godoc
+// @Summary Edit a comment for an article
+// @Description Edit a comment for an article. Auth is required
+// @ID edit-comment
+// @Tags comment
+// @Accept  json
+// @Produce  json
+// @Param slug path string true "Slug of the article that you want to edit a comment for"
+// @Param commentID int true "Comment id"
+// @Param comment body editCommentRequest true "Comment you want to edit"
+// @Success 201 {object} singleCommentResponse
+// @Failure 400 {object} utils.Error
+// @Failure 401 {object} utils.Error
+// @Failure 422 {object} utils.Error
+// @Failure 404 {object} utils.Error
+// @Failure 500 {object} utils.Error
+// @Security ApiKeyAuth
+// @Router /articles/{slug}/comments/{id} [post]
+func (h *Handler) EditComment(c echo.Context) error {
+	id64, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	commentID := uint(id64)
+	
+	slug := c.Param("slug")
+
+	a, err := h.articleStore.GetBySlug(slug)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if a == nil {
+		return c.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	comment, errorT := h.articleStore.GetCommentByID(commentID);
+	
+	req := &editCommentRequest{}
+	req.bind(c, comment)
+
+	if errorT != nil {	
+		return c.JSON(http.StatusInternalServerError, utils.NewError(errorT))
+	}
+
+	if err = h.articleStore.UpdateComment(comment); err != nil {
+		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	return c.JSON(http.StatusCreated, comment)
 }
 
 // GetComments godoc

@@ -2,8 +2,10 @@ package model
 
 import (
 	"github.com/jinzhu/gorm"
+
 )
 
+//Article struct
 type Article struct {
 	gorm.Model
 	Slug        string `gorm:"unique_index;not null"`
@@ -17,6 +19,7 @@ type Article struct {
 	Tags        []Tag  `gorm:"many2many:article_tags;association_autocreate:false"`
 }
 
+//Comment struct
 type Comment struct {
 	gorm.Model
 	Article   Article
@@ -26,6 +29,7 @@ type Comment struct {
 	Body      string
 }
 
+//Tag struct
 type Tag struct {
 	gorm.Model
 	Tag      string    `gorm:"unique_index"`

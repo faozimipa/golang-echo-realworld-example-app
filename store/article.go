@@ -2,19 +2,23 @@ package store
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/xesina/golang-echo-realworld-example-app/model"
+	"github.com/faozimipa/golang-echo-realworld-example-app/model"
+
 )
 
+//ArticleStore struct 
 type ArticleStore struct {
 	db *gorm.DB
 }
 
+//NewArticleStore func 
 func NewArticleStore(db *gorm.DB) *ArticleStore {
 	return &ArticleStore{
 		db: db,
 	}
 }
 
+//GetBySlug func 
 func (as *ArticleStore) GetBySlug(s string) (*model.Article, error) {
 	var m model.Article
 
@@ -30,6 +34,7 @@ func (as *ArticleStore) GetBySlug(s string) (*model.Article, error) {
 	return &m, err
 }
 
+//GetUserArticleBySlug func
 func (as *ArticleStore) GetUserArticleBySlug(userID uint, slug string) (*model.Article, error) {
 	var m model.Article
 
@@ -45,6 +50,7 @@ func (as *ArticleStore) GetUserArticleBySlug(userID uint, slug string) (*model.A
 	return &m, err
 }
 
+//CreateArticle func
 func (as *ArticleStore) CreateArticle(a *model.Article) error {
 	tags := a.Tags
 
@@ -77,6 +83,7 @@ func (as *ArticleStore) CreateArticle(a *model.Article) error {
 	return tx.Commit().Error
 }
 
+//UpdateArticle func 
 func (as *ArticleStore) UpdateArticle(a *model.Article, tagList []string) error {
 	tx := as.db.Begin()
 	if err := tx.Model(a).Update(a).Error; err != nil {
@@ -111,10 +118,12 @@ func (as *ArticleStore) UpdateArticle(a *model.Article, tagList []string) error 
 	return tx.Commit().Error
 }
 
+//DeleteArticle func
 func (as *ArticleStore) DeleteArticle(a *model.Article) error {
 	return as.db.Delete(a).Error
 }
 
+//List func
 func (as *ArticleStore) List(offset, limit int) ([]model.Article, int, error) {
 	var (
 		articles []model.Article
@@ -132,6 +141,7 @@ func (as *ArticleStore) List(offset, limit int) ([]model.Article, int, error) {
 	return articles, count, nil
 }
 
+//ListByTag func 
 func (as *ArticleStore) ListByTag(tag string, offset, limit int) ([]model.Article, int, error) {
 	var (
 		t        model.Tag
@@ -159,6 +169,7 @@ func (as *ArticleStore) ListByTag(tag string, offset, limit int) ([]model.Articl
 	return articles, count, nil
 }
 
+//ListByAuthor func 
 func (as *ArticleStore) ListByAuthor(username string, offset, limit int) ([]model.Article, int, error) {
 	var (
 		u        model.User
@@ -184,6 +195,7 @@ func (as *ArticleStore) ListByAuthor(username string, offset, limit int) ([]mode
 	return articles, count, nil
 }
 
+//ListByWhoFavorited func 
 func (as *ArticleStore) ListByWhoFavorited(username string, offset, limit int) ([]model.Article, int, error) {
 	var (
 		u        model.User
@@ -211,6 +223,7 @@ func (as *ArticleStore) ListByWhoFavorited(username string, offset, limit int) (
 	return articles, count, nil
 }
 
+//ListFeed func 
 func (as *ArticleStore) ListFeed(userID uint, offset, limit int) ([]model.Article, int, error) {
 	var (
 		u        model.User
@@ -249,6 +262,7 @@ func (as *ArticleStore) ListFeed(userID uint, offset, limit int) ([]model.Articl
 	return articles, count, nil
 }
 
+//AddComment func 
 func (as *ArticleStore) AddComment(a *model.Article, c *model.Comment) error {
 	err := as.db.Model(a).Association("Comments").Append(c).Error
 	if err != nil {
@@ -258,6 +272,13 @@ func (as *ArticleStore) AddComment(a *model.Article, c *model.Comment) error {
 	return as.db.Where(c.ID).Preload("User").First(c).Error
 }
 
+
+//UpdateComment func 
+func (as *ArticleStore) UpdateComment(c *model.Comment) error {
+	return as.db.Model(c).Update(c).Error
+}
+
+//GetCommentsBySlug func 
 func (as *ArticleStore) GetCommentsBySlug(slug string) ([]model.Comment, error) {
 	var m model.Article
 	err := as.db.Where(&model.Article{Slug: slug}).Preload("Comments").Preload("Comments.User").First(&m).Error
@@ -273,6 +294,7 @@ func (as *ArticleStore) GetCommentsBySlug(slug string) ([]model.Comment, error) 
 	return m.Comments, nil
 }
 
+//GetCommentByID func 
 func (as *ArticleStore) GetCommentByID(id uint) (*model.Comment, error) {
 	var m model.Comment
 	if err := as.db.Where(id).First(&m).Error; err != nil {
@@ -286,10 +308,12 @@ func (as *ArticleStore) GetCommentByID(id uint) (*model.Comment, error) {
 	return &m, nil
 }
 
+//DeleteComment func 
 func (as *ArticleStore) DeleteComment(c *model.Comment) error {
 	return as.db.Delete(c).Error
 }
 
+//AddFavorite func 
 func (as *ArticleStore) AddFavorite(a *model.Article, userID uint) error {
 	usr := model.User{}
 	usr.ID = userID
@@ -297,6 +321,7 @@ func (as *ArticleStore) AddFavorite(a *model.Article, userID uint) error {
 	return as.db.Model(a).Association("Favorites").Append(&usr).Error
 }
 
+//RemoveFavorite func 
 func (as *ArticleStore) RemoveFavorite(a *model.Article, userID uint) error {
 	usr := model.User{}
 	usr.ID = userID
@@ -304,6 +329,7 @@ func (as *ArticleStore) RemoveFavorite(a *model.Article, userID uint) error {
 	return as.db.Model(a).Association("Favorites").Delete(&usr).Error
 }
 
+//ListTags func 
 func (as *ArticleStore) ListTags() ([]model.Tag, error) {
 	var tags []model.Tag
 	if err := as.db.Find(&tags).Error; err != nil {
