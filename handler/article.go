@@ -297,7 +297,7 @@ func (h *Handler) AddComment(c echo.Context) error {
 // @Accept  json
 // @Produce  json
 // @Param slug path string true "Slug of the article that you want to edit a comment for"
-// @Param commentID int true "Comment id"
+// @Param id path integer true "id of the comment that you want to edit a comment for"
 // @Param comment body editCommentRequest true "Comment you want to edit"
 // @Success 201 {object} singleCommentResponse
 // @Failure 400 {object} utils.Error

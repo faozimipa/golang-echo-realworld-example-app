@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/labstack/echo/v4"
 	"github.com/faozimipa/golang-echo-realworld-example-app/article"
 	"github.com/faozimipa/golang-echo-realworld-example-app/db"

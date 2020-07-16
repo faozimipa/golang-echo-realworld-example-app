@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/jinzhu/gorm"
 	// "github.com/joho/godotenv"
@@ -29,9 +28,9 @@ func New() *gorm.DB {
 
 //TestDB func 
 func TestDB() *gorm.DB {
-	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=rw password=secret  sslmode=disable")
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=rw_test password=secret  sslmode=disable")
 	if err != nil {
-		fmt.Println("storage err: ", err)
+		fmt.Println("database err: ", err)
 	}
 	db.DB().SetMaxIdleConns(3)
 	db.LogMode(false)
@@ -40,9 +39,14 @@ func TestDB() *gorm.DB {
 
 //DropTestDB func
 func DropTestDB() error {
-	if err := os.Remove("./../realworld_test.db"); err != nil {
-		return err
-	}
+	// db, _ := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=rw_test password=secret  sslmode=disable")
+	
+	// db.Exec("DROP database rw_test")
+	// // if err := os.Remove("./../realworld_test.db"); err != nil {
+	// // 	return err
+	// // }
+
+	// db.Exec("CREATE DATABASE rw_test")
 	return nil
 }
 

@@ -28,7 +28,7 @@ func TestListArticlesCaseSuccess(t *testing.T) {
 		var aa articleListResponse
 		err := json.Unmarshal(rec.Body.Bytes(), &aa)
 		assert.NoError(t, err)
-		assert.Equal(t, 2, aa.ArticlesCount)
+		assert.Equal(t, len(aa.Articles), aa.ArticlesCount)
 	}
 }
 
