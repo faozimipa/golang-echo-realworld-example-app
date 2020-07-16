@@ -1,13 +1,20 @@
 package router
 
 import (
+    "github.com/labstack/echo-contrib/jaegertracing"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+
 )
 
+//New func router
 func New() *echo.Echo {
 	e := echo.New()
+    // Enable tracing middleware
+	c := jaegertracing.New(e, nil)
+	defer c.Close()
+	
 	e.Logger.SetLevel(log.DEBUG)
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
